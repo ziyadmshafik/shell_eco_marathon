@@ -404,6 +404,8 @@ class MyApp(App):
 		mygauge = Gauge(value=0, size_gauge=256, size_text=60, pos=(0,84))
 		Clock.schedule_interval(update_speed, 0.5)
 		Clock.schedule_once(incgauge,1)
+		
+		stopwatchwidget = StopWatch();
 
 
 	# Create the rest of the UI objects (and bind them to callbacks, if necessary):
@@ -422,7 +424,7 @@ class MyApp(App):
                 horn_button = Button(text="BEEP!",size_hint=(.14,.14*2),pos = (684,20))
                 horn_button.bind(on_press=press_callback)
 
-                wimg = Image(source='texas_logo.jpeg', scale = 0.5, pos = (200,100))
+                #wimg = Image(source='texas_logo.jpeg', scale = 0.5, pos = (200,100))
 
 	# Add the UI elements to the layout:
                 layout.add_widget(mygauge)
@@ -434,7 +436,7 @@ class MyApp(App):
                 layout.add_widget(wiper_button)
                 layout.add_widget(horn_button)
 #	        layout.add_widget(mygauge)
-                layout.add_widget(wimg)
+                layout.add_widget(stopwatchwidget)
 
 #	        Clock.schedule_once(incgauge,5)
         	return layout

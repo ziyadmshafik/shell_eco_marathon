@@ -182,12 +182,29 @@ def press_callback(obj):
         if obj.text == 'Hazard':
                 if obj.state == "down":
                         print ("button on")
-                        GPIO.output(hazardpin, GPIO.HIGH)
+                        GPIO.output(rightsignalpin, GPIO.HIGH)
+			GPIO.output(leftsignalpin, GPIO.HIGH)
 			Clock.schedule_once(hazard_toggle, 0.75)
 		else:
 			Clock.unschedule(hazard_toggle)
-			GPIO.output(hazardpin, GPIO.LOW)
-
+			GPIO.output(rightsignalpin, GPIO.LOW)
+			GPIO.output(leftsignalpin, GPIO.LOW)
+        if obj.text == 'Left\nSignal':
+                if obj.state == "down":
+                        print ("button on")
+                        GPIO.output(leftsignalpin, GPIO.HIGH)
+			Clock.schedule_once(leftsig_toggle, 0.75)
+		else:
+			Clock.unschedule(leftsig_toggle)
+			GPIO.output(leftsignalpin, GPIO.LOW)
+        if obj.text == 'Right\nSignal':
+                if obj.state == "down":
+                        print ("button on")
+                        GPIO.output(rightsignalpin, GPIO.HIGH)
+			Clock.schedule_once(rightsig_toggle, 0.75)
+		else:
+			Clock.unschedule(rightsig_toggle)
+			GPIO.output(rightsignalpin, GPIO.LOW)
 #def setgauge(sender,value):
 #	mygauge.value = value
 
@@ -200,8 +217,17 @@ def horn_off(dt):
 	GPIO.output(hornpin, GPIO.LOW)
 
 def hazard_toggle(dt):
-	GPIO.output(hazardpin, not GPIO.input(hazardpin))
+	GPIO.output(rightsignalpin, not GPIO.input(rightsignalpin))
+	GPIO.output(leftsignalpin, not GPIO.input(leftsignalpin))
 	Clock.schedule_once(hazard_toggle, 0.75)
+	
+def rightsig_toggle(dt):
+	GPIO.output(rightsignalpin, not GPIO.input(rightsignalpin))
+	Clock.schedule_once(rightsig_toggle, 0.75)
+
+def leftsig_toggle(dt):
+	GPIO.output(leftsignalpin, not GPIO.input(leftsignalpin))
+	Clock.schedule_once(leftsig_toggle, 0.75)
 
 def calculate_elapse(channel):            		# callback function
 	global pulse, start_timer, elapse

@@ -149,6 +149,16 @@ class Gauge(Widget):
 
 class StopWatch(Widget):
 
+    #gloabl variables
+    seconds = 0
+    minuets = 0
+    mili = 0
+    _mili = 0
+    time_track = StringProperty("00:00:00")
+    laps = []
+    running = False
+    resetting = True
+    addLap = False
     timelbl = ObjectProperty(None)    
     laplbl = ObjectProperty(None)
     

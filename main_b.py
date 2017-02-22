@@ -149,6 +149,59 @@ class Gauge(Widget):
 
 class StopWatch(Widget):
 
+	<StopWatch>:
+    timelbl: timeLabel
+    laplbl: LapLabel
+
+    Label:
+    	id: timeLabel
+        font_size: 70  
+        center_y: root.height /5
+        center_x: root.width /2 
+        top: root.top - 50
+        text: str(root.timelbl)
+
+    Label:
+    	id: LapLabel
+        font_size: 35  
+        center_y: root.height /2 + 40
+        center_x: root.width /4 + 20
+        top: root.top - 50
+        text: str(root.laplbl)
+
+    Button:
+    	id: StartButton 
+    	size: 100,50
+    	text: "Start"
+    	center_y: (root.height /10) 
+        center_x: (root.width /2 ) - 150
+        on_press: root.start_time()
+       
+
+    Button:
+    	id: StopButton 
+    	size: 100,50
+    	text: "Stop"
+    	center_y: (root.height /10)
+        center_x: (root.width /2 ) + 50
+        on_press: root.stopTime()
+
+    Button:
+    	id: ResetButton 
+    	size: 100,50
+    	text: "reset"
+    	center_y: (root.height /10)
+        center_x: (root.width /2 ) -50
+        on_press: root.resetTime()
+
+    Button:
+    	id: LapButton 
+    	size: 100,50
+    	text: "Lap"
+    	center_y: (root.height /10)
+        center_x: (root.width /2 ) + 150 
+        on_press: root.Lap()
+		
     #gloabl variables
     seconds = 0
     minuets = 0
@@ -439,6 +492,7 @@ class MyApp(App):
                 layout.add_widget(stopwatchwidget)
 
 #	        Clock.schedule_once(incgauge,5)
+		Clock.schedule_interval(watch.update, 1/100)
         	return layout
 
 if __name__ == '__main__':

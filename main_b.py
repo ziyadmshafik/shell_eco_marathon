@@ -426,7 +426,7 @@ class MyApp(App):
                 layout.add_widget(stopwatchwidget)
 
 #	        Clock.schedule_once(incgauge,5)
-		Clock.schedule_interval(watch.update, 1/100)
+		Clock.schedule_interval(stopwatchwidget.update, 1/100)
         	return layout
 
 if __name__ == '__main__':

@@ -149,3 +149,157 @@ class Gauge(Widget):
 
 dirflag = 1
 value = 0
+
+# This callback will be bound to the LED toggle and Beep button:
+def press_callback(obj):
+	print("Button pressed,", obj.text)
+	if obj.text == 'BEEP!':
+		# turn on the beeper:
+		GPIO.output(hornpin, GPIO.HIGH)
+		# schedule it to turn off:
+		Clock.schedule_once(horn_off, .25)
+	if obj.text == 'Driving\nLights':
+		if obj.state == "down":
+			print ("button on")
+			GPIO.output(lowbeampin, GPIO.HIGH)
+		else:
+			print ("button off")
+			GPIO.output(lowbeampin, GPIO.LOW)
+        if obj.text == 'Highbeam\nLights':
+                if obj.state == "down":
+                        print ("button on")
+                        GPIO.output(highbeampin, GPIO.HIGH)
+                else:
+                        print ("button off")
+                        GPIO.output(highbeampin, GPIO.LOW)
+        if obj.text == 'Wiper':
+                if obj.state == "down":
+                        print ("button on")
+                        GPIO.output(wiperpin, GPIO.HIGH)
+                else:
+                        print ("button off")
+                        GPIO.output(wiperpin, GPIO.LOW)
+        if obj.text == 'Hazard':
+                if obj.state == "down":
+                        print ("button on")
+                        GPIO.output(hazardpin, GPIO.HIGH)
+			Clock.schedule_once(hazard_toggle, 0.75)
+		else:
+			Clock.unschedule(hazard_toggle)
+			GPIO.output(hazardpin, GPIO.LOW)
+
+#def setgauge(sender,value):
+#	mygauge.value = value
+
+
+#def update_speed(dt):
+#	value = calculate_speed(20)
+#	setgauge(0,value)
+
+def horn_off(dt):
+	GPIO.output(hornpin, GPIO.LOW)
+
+def hazard_toggle(dt):
+	GPIO.output(hazardpin, not GPIO.input(hazardpin))
+	Clock.schedule_once(hazard_toggle, 0.75)
+
+def calculate_elapse(channel):            		# callback function
+	global pulse, start_timer, elapse
+	pulse+=1                        		# increase pulse by 1 whenever interrupt occurred
+	elapse = time.time() - start_timer      	# elapse for every 1 complete rotation made!
+	start_timer = time.time()            		# let current time equals to start_timer
+
+def calculate_speed(r_cm):
+	global pulse,elapse,rpm,dist_km,dist_meas,km_per_sec,km_per_hour
+	if elapse !=0:                     		# to avoid DivisionByZero error
+		rpm = 1/elapse * 60
+		circ_cm = (2*math.pi)*r_cm         	# calculate wheel circumference in CM
+		dist_km = circ_cm/100000          	# convert cm to km
+		km_per_sec = dist_km / elapse      	# calculate KM/sec
+		km_per_hour = km_per_sec * 3600      	# calculate KM/h
+		dist_meas = (dist_km*pulse)*1000   	# measure distance traverse in meter
+		print('rpm:{0:.0f}-RPM kmh:{1:.0f}-KMH dist_meas:{2:.2f}m pulse:{3}'.format(rpm,km_per_hour,dist_meas,pulse))
+		return km_per_hour
+
+def init_interrupt():
+   GPIO.add_event_detect(sensor, GPIO.FALLING, callback = calculate_elapse, bouncetime = 20)
+
+class MyApp(App):
+
+	def build(self):
+		# Set up the layout:
+		# layout = GridLayout(cols=5, spacing=30, padding=30, row_default_height=150)
+		layout = FloatLayout(size=(800,600))
+		# Make the background gray:
+		#with layout.canvas.before:
+		#	Color(.2,.2,.2,1)
+		#	self.rect = Rectangle(size=(800,600), pos=layout.pos)
+#			from kivy.clock import Clock
+#			from functools import partial
+#			from kivy.uix.slider import Slider
+
+
+		def update_speed(dt):
+			value = calculate_speed(20)
+			setgauge(0,value)
+
+		def setgauge(sender, value):
+			mygauge.value = value
+
+		def incgauge(dt):
+			global value
+			global temp_val
+			for temp_val in range(0,100):
+				temp_val += 1
+				value += 1
+				setgauge(0,value)
+				print(value)
+			for temp_var in range(0,100):
+				temp_val += 1
+				value -= 1
+				setgauge(0,value)
+				print(value)
+
+		mygauge = Gauge(value=0, size_gauge=256, size_text=60, pos=(0,84))
+		Clock.schedule_interval(update_speed, 0.5)
+		Clock.schedule_once(incgauge,1)
+
+
+	# Create the rest of the UI objects (and bind them to callbacks, if necessary):
+                highbeam_button = ToggleButton(text="Highbeam\nLights", halign='center', size_hint=(.14,.14*2),pos = (2,20))
+                highbeam_button.bind(on_press=press_callback)
+                lowbeam_button = ToggleButton(text="Driving\nLights", halign='center' , size_hint=(.14,.14*2),pos = (114,20))
+                lowbeam_button.bind(on_press=press_callback)
+                leftsig_button = ToggleButton(text="Left\nSignal", halign='center' , size_hint=(.14,.14*2),pos = (228,20))
+                leftsig_button.bind(on_press=press_callback)
+                hazard_button = ToggleButton(text="Hazard",size_hint=(.14,.14*2),pos = (342,20))
+                hazard_button.bind(on_press=press_callback)
+                rightsig_button = ToggleButton(text="Right\nSignal", halign='center',size_hint=(.14,.14*2),pos = (456,20))
+                rightsig_button.bind(on_press=press_callback)
+                wiper_button = ToggleButton(text="Wiper",size_hint=(.14,.14*2),pos = (570,20))
+                wiper_button.bind(on_press=press_callback)
+                horn_button = Button(text="BEEP!",size_hint=(.14,.14*2),pos = (684,20))
+                horn_button.bind(on_press=press_callback)
+
+                wimg = Image(source='texas_logo.jpeg', scale = 0.5, pos = (200,100))
+
+	# Add the UI elements to the layout:
+                layout.add_widget(mygauge)
+                layout.add_widget(highbeam_button)
+                layout.add_widget(lowbeam_button)
+                layout.add_widget(leftsig_button)
+                layout.add_widget(hazard_button)
+                layout.add_widget(rightsig_button)
+                layout.add_widget(wiper_button)
+                layout.add_widget(horn_button)
+#	        layout.add_widget(mygauge)
+                layout.add_widget(wimg)
+
+#	        Clock.schedule_once(incgauge,5)
+        return layout
+
+if __name__ == '__main__':
+    init_interrupt()
+#	Clock.schedule_interval(update_speed, 0.5)
+    MyApp().run()
+

@@ -182,6 +182,8 @@ def press_callback(obj):
         if obj.text == 'Hazard':
                 if obj.state == "down":
                         print ("button on")
+			Clock.unschedule(leftsig_toggle)
+			Clock.unschedule(rightsig_toggle)
                         GPIO.output(rightsignalpin, GPIO.HIGH)
 			GPIO.output(leftsignalpin, GPIO.HIGH)
 			Clock.schedule_once(hazard_toggle, 0.75)
@@ -192,6 +194,8 @@ def press_callback(obj):
         if obj.text == 'Left\nSignal':
                 if obj.state == "down":
                         print ("button on")
+			Clock.unschedule(rightsig_toggle)
+			Clock.unschedule(hazard_toggle)
                         GPIO.output(leftsignalpin, GPIO.HIGH)
 			Clock.schedule_once(leftsig_toggle, 0.75)
 		else:
@@ -200,6 +204,8 @@ def press_callback(obj):
         if obj.text == 'Right\nSignal':
                 if obj.state == "down":
                         print ("button on")
+			Clock.unschedule(leftsig_toggle)
+			Clock.unschedule(hazard_toggle)
                         GPIO.output(rightsignalpin, GPIO.HIGH)
 			Clock.schedule_once(rightsig_toggle, 0.75)
 		else:

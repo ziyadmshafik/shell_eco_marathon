@@ -296,7 +296,7 @@ class MyApp(App):
                 layout.add_widget(wimg)
 
 #	        Clock.schedule_once(incgauge,5)
-        return layout
+        	return layout
 
 if __name__ == '__main__':
     init_interrupt()

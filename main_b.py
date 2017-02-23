@@ -303,7 +303,7 @@ def press_callback(obj):
 		else:
 			print ("button off")
 			GPIO.output(lowbeampin, GPIO.LOW)
-        if obj.text == 'Highbeam\nLights':
+        if obj.text == 'High\nBeam\nLights':
                 if obj.state == "down":
                         print ("button on")
                         GPIO.output(highbeampin, GPIO.HIGH)

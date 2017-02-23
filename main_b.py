@@ -94,7 +94,7 @@ class StopWatch(Widget):
         self.lapbtn.bind(on_press=self.lap_time)
 
         self.laplbl.pos = (525,400)
-        self.laplbl.max_lines=9
+        self.laplbl.max_lines=5
         self.timelbl.pos = (525,235)
         self.startbtn.pos = (344,142)
         self.stopbtn.pos = (458,142)

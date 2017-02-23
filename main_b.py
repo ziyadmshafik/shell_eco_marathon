@@ -66,6 +66,144 @@ GPIO.setwarnings(False)
 GPIO.setup(sensor,GPIO.IN,GPIO.PUD_UP)
 
 # Define some helper functions:
+class StopWatch(Widget):
+    
+    def __init__(self, **kwargs):
+        super(StopWatch, self).__init__(**kwargs)
+
+        self.laplbl = Label(text="test",font_size=25, markup=True)
+        self.add_widget(self.laplbl)
+
+        self.timelbl = Label(text="test",font_size=50, markup=True)
+        self.add_widget(self.timelbl)
+
+        self.startbtn = Button(text="Start", size=(112,120), font_size=25)
+        self.add_widget(self.startbtn)
+        self.startbtn.bind(on_press=self.start_time)
+
+        self.stopbtn = Button(text="Stop", size=(112,120), font_size=25)
+        self.add_widget(self.stopbtn)
+        self.stopbtn.bind(on_press=self.stop_time)
+
+        self.resetbtn = Button(text="Reset", size=(112,120), font_size=25)
+        self.add_widget(self.resetbtn)
+        self.resetbtn.bind(on_press=self.reset_time)
+
+        self.lapbtn = Button(text="Lap", size=(112,120), font_size=25)
+        self.add_widget(self.lapbtn)
+        self.lapbtn.bind(on_press=self.lap_time)
+
+        self.laplbl.pos = (525,400)
+        self.laplbl.max_lines=9
+        self.timelbl.pos = (525,235)
+        self.startbtn.pos = (344,142)
+        self.stopbtn.pos = (458,142)
+        self.resetbtn.pos = (572,142)
+        self.lapbtn.pos = (686,142)
+
+    #gloabl variables
+    seconds = 0
+    minuets = 0
+    mili = 0
+    _mili = 0
+    time_track = StringProperty("00:00:00")
+    laps = []
+    running = False
+    resetting = True
+    addLap = False
+
+    def printLaps(self):
+        lap_string = ""
+        count = len(self.laps)
+        for lap in reversed(self.laps):
+            lap_string += "Lap " + str(count) +": " + lap + "\n"
+            count -=1
+        return lap_string   
+
+    def update(self,dt):
+        self.timelbl.text = str(self.time_track)
+        
+        if not self.laps:
+            self.laplbl.text = ""
+        else:
+            self.laplbl.text = self.printLaps()
+       
+        if(self.running):
+
+            if(self.seconds < 10 and self.minuets < 10 and self.mili < 10):
+                self.time_track = "0" + str(self.minuets) + ":0" + str(self.seconds) + ":0" + str(self.mili)
+            
+            elif(self.seconds < 10 and self.minuets < 10 and self.mili >= 10):
+                self.time_track = "0" + str(self.minuets) + ":0" + str(self.seconds) + ":" + str(self.mili)
+            
+            elif(self.seconds >= 10 and self.minuets < 10 and self.mili < 10 ):
+                self.time_track = "0" + str(self.minuets) + ":" + str(self.seconds) + ":0" + str(self.mili)
+
+            elif(self.seconds >= 10 and self.minuets < 10 and self.mili >= 10):
+                self.time_track = "0" + str(self.minuets) + ":" + str(self.seconds) + ":" + str(self.mili)
+
+            elif(self.seconds >= 10 and self.minuets >= 10 and self.mili < 10):
+                self.time_track =  str(self.minuets) + ":" + str(self.seconds) + ":0" + str(self.mili)
+
+            elif(self.seconds < 10 and self.minuets >= 10 and self.mili >= 10):
+                self.time_track = "0" + str(self.minuets) + ":" + str(self.seconds) + ":" + str(self.mili)
+            
+            elif(self.seconds < 10 and self.minuets >= 10 and self.mili < 10):
+                self.time_track = str(self.minuets) + ":0" + str(self.seconds) + ":0" + str(self.mili)
+            
+            elif(self.seconds >= 10 and self.minuets >= 10 and self.mili >= 10):
+                self.time_track = str(self.minuets) + ":" + str(self.seconds) + ":" + str(self.mili)
+
+            if(self.seconds >= 60):
+
+                self.minuets += 1
+                self.seconds = 0
+
+            if(self.mili >= 99):
+                self.seconds+=1
+                self.mili = 0
+                self._mili = 0
+
+            self._mili += dt*100
+            self.mili = int(round(self._mili, 0))
+           
+        if(self.resetting == True):
+            self.minuets = 0
+            self.seconds = 0
+            self.mili = 0
+            self.time_track = str(self.minuets) + "0:0" + str(self.seconds) + ":0" + str(self.mili)
+            self.laps = []
+            self.resetting = False
+            self.running = False
+
+        if(self.addLap == True):
+            self.laps.append(self.time_track)
+            self.laplbl.text = str(self.time_track)
+            self.addLap = False
+           
+
+    #Starts the timer
+    def start_time(self,dt):
+        print("START TIME!")
+        self.running = True
+        
+    #Stops the timer
+    def stop_time(self,dt):
+        print("STOP TIME!")
+        self.running = False
+
+    #Reset the timer
+    def reset_time(self,dt):
+        print("RESET TIME!")
+        self.running = False
+        self.resetting = True
+
+    def lap_time(self,dt):
+        print("LAP!")
+        self.addLap = True
+        print(self.time_track)
+
+
 class DummyClass: pass
 
 class Gauge(Widget):
@@ -262,6 +400,8 @@ class MyApp(App):
 		# Set up the layout:
 		# layout = GridLayout(cols=5, spacing=30, padding=30, row_default_height=150)
 		layout = FloatLayout(size=(800,600))
+		mystopwatch = StopWatch()
+        	Clock.schedule_interval(mystopwatch.update, 1/100)
 		# Make the background gray:
 		#with layout.canvas.before:
 		#	Color(.2,.2,.2,1)
@@ -316,6 +456,7 @@ class MyApp(App):
 
 	# Add the UI elements to the layout:
                 layout.add_widget(mygauge)
+		layout.add_widget(mystopwatch)
                 layout.add_widget(highbeam_button)
                 layout.add_widget(lowbeam_button)
                 layout.add_widget(leftsig_button)

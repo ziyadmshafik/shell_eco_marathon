@@ -412,7 +412,7 @@ class MyApp(App):
 
 
 		def update_speed(dt):
-			value = calculate_speed(20)
+			value = calculate_speed(28)
 			setgauge(0,value)
 
 		def setgauge(sender, value):
@@ -437,19 +437,19 @@ class MyApp(App):
 		Clock.schedule_once(incgauge,1)
 		
 	# Create the rest of the UI objects (and bind them to callbacks, if necessary):
-                highbeam_button = ToggleButton(text="Highbeam\nLights", halign='center', size_hint=(.14,.2),pos = (2,20))
+                highbeam_button = ToggleButton(text="High\nBeam\nLights", halign='center', size_hint=(.14,.2),pos = (2,20), font_size=25)
                 highbeam_button.bind(on_press=press_callback)
-                lowbeam_button = ToggleButton(text="Driving\nLights", halign='center' , size_hint=(.14,.2),pos = (114,20))
+                lowbeam_button = ToggleButton(text="Driving\nLights", halign='center' , size_hint=(.14,.2),pos = (116,20), font_size=25)
                 lowbeam_button.bind(on_press=press_callback)
-                leftsig_button = ToggleButton(text="Left\nSignal", group='signals', halign='center' , size_hint=(.14,.2),pos = (228,20))
+                leftsig_button = ToggleButton(text="Left\nSignal", group='signals', halign='center' , size_hint=(.14,.2),pos = (230,20), font_size=25)
                 leftsig_button.bind(on_press=press_callback)
-                hazard_button = ToggleButton(text="Hazard", group='signals',size_hint=(.12,.2),pos = (342,20))
+                hazard_button = ToggleButton(text="Hazard", group='signals',size_hint=(.14,.2),pos = (344,20), font_size=25)
                 hazard_button.bind(on_press=press_callback)
-                rightsig_button = ToggleButton(text="Right\nSignal", group='signals',halign='center',size_hint=(.14,.2),pos = (456,20))
+                rightsig_button = ToggleButton(text="Right\nSignal", group='signals',halign='center',size_hint=(.14,.2),pos = (458,20), font_size=25)
                 rightsig_button.bind(on_press=press_callback)
-                wiper_button = ToggleButton(text="Wiper",size_hint=(.14,.2),pos = (570,20))
+                wiper_button = ToggleButton(text="Wiper",size_hint=(.14,.2),pos = (572,20), font_size=25)
                 wiper_button.bind(on_press=press_callback)
-                horn_button = Button(text="BEEP!",size_hint=(.14,.2),pos = (684,20))
+                horn_button = Button(text="BEEP!",size_hint=(.14,.2),pos = (686,20), font_size=25)
                 horn_button.bind(on_press=press_callback)
 
                 #wimg = Image(source='texas_logo.jpeg', scale = 0.5, pos = (200,100))

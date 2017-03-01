@@ -349,6 +349,7 @@ def press_callback(obj):
 		else:
 			Clock.unschedule(rightsig_toggle)
 			GPIO.output(rightsignalpin, GPIO.LOW)
+		
 #def setgauge(sender,value):
 #	mygauge.value = value
 
@@ -356,6 +357,9 @@ def press_callback(obj):
 #def update_speed(dt):
 #	value = calculate_speed(20)
 #	setgauge(0,value)
+
+def shutdown_func():  
+    os.system("sudo shutdown -h now")
 
 def horn_off(dt):
 	GPIO.output(hornpin, GPIO.LOW)
@@ -451,6 +455,8 @@ class MyApp(App):
                 wiper_button.bind(on_press=press_callback)
                 horn_button = Button(text="BEEP!",size_hint=(.14,.25),pos = (686,20), font_size=25)
                 horn_button.bind(on_press=press_callback)
+		shutdown_button = Button(text="Bye :)",size_hint=(.14,.14),pos = (686,410), font_size=25)
+                shutdown_button.bind(on_press=shutdown_func)
 
                 #wimg = Image(source='texas_logo.jpeg', scale = 0.5, pos = (200,100))
 
@@ -464,7 +470,7 @@ class MyApp(App):
                 layout.add_widget(rightsig_button)
                 layout.add_widget(wiper_button)
                 layout.add_widget(horn_button)
-#	        layout.add_widget(mygauge)
+	        layout.add_widget(shutdown_button)
 
 #	        Clock.schedule_once(incgauge,5)
         	return layout

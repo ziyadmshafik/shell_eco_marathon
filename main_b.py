@@ -359,7 +359,7 @@ def press_callback(obj):
 #	value = calculate_speed(20)
 #	setgauge(0,value)
 
-def shutdown_func():  
+def shutdown_func(obj):  
     os.system("sudo shutdown -h now")
 
 def horn_off(dt):

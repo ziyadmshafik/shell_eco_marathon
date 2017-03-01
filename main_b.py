@@ -48,15 +48,15 @@ rightsignalpin = 15
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(lowbeampin, GPIO.OUT)
-GPIO.output(lowbeampin, GPIO.LOW)
+GPIO.output(lowbeampin, GPIO.HIGH)
 GPIO.setup(highbeampin, GPIO.OUT)
-GPIO.output(highbeampin, GPIO.LOW)
+GPIO.output(highbeampin, GPIO.HIGH)
 GPIO.setup(hazardpin, GPIO.OUT)
-GPIO.output(hazardpin, GPIO.LOW)
+GPIO.output(hazardpin, GPIO.HIGH)
 GPIO.setup(wiperpin, GPIO.OUT)
-GPIO.output(wiperpin, GPIO.LOW)
+GPIO.output(wiperpin, GPIO.HIGH)
 GPIO.setup(hornpin, GPIO.OUT)
-GPIO.output(hornpin, GPIO.LOW)
+GPIO.output(hornpin, GPIO.HIGH)
 GPIO.setup(leftsignalpin, GPIO.OUT)
 GPIO.output(leftsignalpin, GPIO.LOW)
 GPIO.setup(rightsignalpin, GPIO.OUT)
@@ -293,30 +293,30 @@ def press_callback(obj):
 	print("Button pressed,", obj.text)
 	if obj.text == 'BEEP!':
 		# turn on the beeper:
-		GPIO.output(hornpin, GPIO.HIGH)
+		GPIO.output(hornpin, GPIO.LOW)
 		# schedule it to turn off:
-		Clock.schedule_once(horn_off, .25)
+		Clock.schedule_once(horn_off, .1)
 	if obj.text == 'Driving\nLights':
 		if obj.state == "down":
 			print ("button on")
-			GPIO.output(lowbeampin, GPIO.HIGH)
+			GPIO.output(lowbeampin, GPIO.LOW)
 		else:
 			print ("button off")
-			GPIO.output(lowbeampin, GPIO.LOW)
+			GPIO.output(lowbeampin, GPIO.HIGH)
         if obj.text == 'High\nBeam\nLights':
                 if obj.state == "down":
                         print ("button on")
-                        GPIO.output(highbeampin, GPIO.HIGH)
+                        GPIO.output(highbeampin, GPIO.LOW)
                 else:
                         print ("button off")
-                        GPIO.output(highbeampin, GPIO.LOW)
+                        GPIO.output(highbeampin, GPIO.HIGH)
         if obj.text == 'Wiper':
                 if obj.state == "down":
                         print ("button on")
-                        GPIO.output(wiperpin, GPIO.HIGH)
+                        GPIO.output(wiperpin, GPIO.LOW)
                 else:
                         print ("button off")
-                        GPIO.output(wiperpin, GPIO.LOW)
+                        GPIO.output(wiperpin, GPIO.HIGH)
         if obj.text == 'Hazard':
                 if obj.state == "down":
                         print ("button on")
@@ -362,7 +362,7 @@ def shutdown_func():
     os.system("sudo shutdown -h now")
 
 def horn_off(dt):
-	GPIO.output(hornpin, GPIO.LOW)
+	GPIO.output(hornpin, GPIO.HIGH)
 
 def hazard_toggle(dt):
 	GPIO.output(rightsignalpin, not GPIO.input(rightsignalpin))

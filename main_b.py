@@ -28,7 +28,7 @@ from kivy.graphics import Color, Rectangle
 
 import RPi.GPIO as GPIO
 
-# changed
+# changed 
 #variables for speed calculations:
 dist_meas = 0.00
 km_per_hour = 0

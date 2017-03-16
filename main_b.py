@@ -296,6 +296,8 @@ def press_callback(obj):
 	if obj.text == 'BEEP!':
 		# turn on the beeper:
 		GPIO.output(hornpin, GPIO.LOW)
+		GPIO.output(hornpin, GPIO.HIGH)
+		GPIO.output(hornpin, GPIO.LOW)
 		# schedule it to turn off:
 		Clock.schedule_once(horn_off, .1)
 	if obj.text == 'Driving\nLights':
@@ -418,7 +420,7 @@ class MyApp(App):
 
 
 		def update_speed(dt):
-			value = calculate_speed(28)
+			value = calculate_speed(25)
 			setgauge(0,value)
 
 		def setgauge(sender, value):
